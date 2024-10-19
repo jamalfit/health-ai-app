@@ -80,4 +80,5 @@ def health_check():
     return jsonify({"status": "healthy", "service": "health-ai-app"}), 200
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
+    port = int(os.environ.get('PORT', 8080))
+    app.run(debug=False, host='0.0.0.0', port=port)
