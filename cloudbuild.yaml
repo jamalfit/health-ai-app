@@ -18,5 +18,9 @@ steps:
   - 'us-central1'
   - '--platform'
   - 'managed'
+  - '--set-secrets'
+  - 'OPENAI_API_KEY=openai-api-key:latest'
 images:
 - 'gcr.io/health-ai-app-2024-439109/health-ai-app-image:$COMMIT_SHA'
+options:
+  logging: CLOUD_LOGGING_ONLY
