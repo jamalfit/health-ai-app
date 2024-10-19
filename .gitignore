@@ -8,3 +8,7 @@ Dockerfile.simple
 Dockerfile.test
 cloudbuild_docker.yaml
 cloudbuild_minimal.yaml" >> .gitignore
+echo "*.log" >> .gitignore
+echo "*.pyc" >> .gitignore
+echo "__pycache__" >> .gitignore
+echo "venv/" >> .gitignore
