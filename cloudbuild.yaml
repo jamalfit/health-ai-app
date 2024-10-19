@@ -1,11 +1,15 @@
 steps:
+# Print Docker version
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['version']
+
 # Build the container image
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '--platform', 'linux/amd64', '-t', 'gcr.io/health-ai-app-2024-439109/health-ai-app-image:$COMMIT_SHA', '.']
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/health-ai-app-image:$BUILD_ID', '.']
 
 # Push the container image to Container Registry
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/health-ai-app-2024-439109/health-ai-app-image:$COMMIT_SHA']
+  args: ['push', 'gcr.io/$PROJECT_ID/health-ai-app-image:$BUILD_ID']
 
 # Deploy container image to Cloud Run
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -15,16 +19,15 @@ steps:
   - 'deploy'
   - 'health-ai-app-service'
   - '--image'
-  - 'gcr.io/health-ai-app-2024-439109/health-ai-app-image:$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/health-ai-app-image:$BUILD_ID'
   - '--region'
   - 'us-central1'
   - '--platform'
   - 'managed'
-  - '--set-secrets'
-  - 'OPENAI_API_KEY=openai-api-key:latest'
+  - '--allow-unauthenticated'
 
 images:
-- 'gcr.io/health-ai-app-2024-439109/health-ai-app-image:$COMMIT_SHA'
+- 'gcr.io/$PROJECT_ID/health-ai-app-image:$BUILD_ID'
 
 options:
   logging: CLOUD_LOGGING_ONLY
