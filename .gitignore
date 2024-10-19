@@ -2,3 +2,9 @@ echo "venv/
 __pycache__/
 *.pyc
 .env" > .gitignore
+
+echo "Dockerfile.minimal
+Dockerfile.simple
+Dockerfile.test
+cloudbuild_docker.yaml
+cloudbuild_minimal.yaml" >> .gitignore
