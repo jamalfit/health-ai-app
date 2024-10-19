@@ -22,7 +22,7 @@ steps:
   - 'managed'
   - '--allow-unauthenticated'
   - '--set-env-vars'
-  - 'PORT=8080,FLASK_APP=src/app.py'
+  - 'PORT=8080'
 
 images:
 - 'gcr.io/$PROJECT_ID/health-ai-app-image:$COMMIT_SHA'
