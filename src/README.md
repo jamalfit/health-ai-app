@@ -95,8 +95,9 @@ The script will output the health check response and provide a simple interpreta
 
 You can also manually check the health by visiting the `/health` endpoint in your web browser. The URL will be:
 
-```
-https://health-ai-app-service-[unique-id].a.run.app/health
+
+
+https://health-ai-app-service-251454609175.us-central1.run.app/
 ```
 
 Replace `[unique-id]` with the actual unique identifier of your Cloud Run service.
