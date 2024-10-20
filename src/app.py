@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from google.cloud import secretmanager
-import openai
+from openai import OpenAI
 import os
 import logging
 
@@ -23,7 +23,7 @@ try:
     # Cache secrets at startup
     openai_api_key = access_secret('openai-api-key')
     assistant_id = access_secret('openai-assistant-id')
-    openai.api_key = openai_api_key
+    openai_client = OpenAI(api_key=openai_api_key)
     app.logger.info("Secrets loaded successfully")
 except Exception as e:
     app.logger.error(f"Failed to load secrets: {str(e)}")
@@ -60,14 +60,14 @@ def index():
 
         try:
             app.logger.info("Sending request to OpenAI")
-            response = openai.ChatCompletion.create(
+            response = openai_client.chat.completions.create(
                 model="gpt-4",
                 messages=[
                     {"role": "system", "content": "You are a helpful assistant."},
                     {"role": "user", "content": prompt}
                 ]
             )
-            assistant_response = response.choices[0].message['content']
+            assistant_response = response.choices[0].message.content
             app.logger.info("Received response from OpenAI")
             return render_template('index.html', response=assistant_response)
 
