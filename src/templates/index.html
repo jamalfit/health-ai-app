@@ -2,48 +2,46 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patient Data</title>
+    <title>Patient Data Form</title>
 </head>
 <body>
     <h1>Patient Data Form</h1>
-    
     <form method="POST">
-        <label for="identifier">Identifier:</label>
-        <input type="text" name="identifier" id="identifier"><br><br>
+        <label for="identifier">Identifier:</label><br>
+        <input type="text" id="identifier" name="identifier"><br><br>
 
-        <label for="gender">Gender:</label>
-        <input type="text" name="gender" id="gender"><br><br>
+        <label for="gender">Gender:</label><br>
+        <input type="text" id="gender" name="gender"><br><br>
 
-        <label for="height">Height (inches):</label>
-        <input type="number" name="height" id="height"><br><br>
+        <label for="height">Height (in inches):</label><br>
+        <input type="number" id="height" name="height"><br><br>
 
-        <label for="weight">Weight (pounds):</label>
-        <input type="number" name="weight" id="weight"><br><br>
+        <label for="weight">Weight (in pounds):</label><br>
+        <input type="number" id="weight" name="weight"><br><br>
 
-        <label for="medications">Medications:</label>
-        <input type="text" name="medications" id="medications"><br><br>
+        <label for="medications">Current Medications:</label><br>
+        <textarea id="medications" name="medications"></textarea><br><br>
 
-        <label for="allergies">Allergies:</label>
-        <input type="text" name="allergies" id="allergies"><br><br>
+        <label for="allergies">Drug Allergies:</label><br>
+        <textarea id="allergies" name="allergies"></textarea><br><br>
 
-        <label for="conditions">Conditions:</label>
-        <input type="text" name="conditions" id="conditions"><br><br>
+        <label for="conditions">Current Medical Conditions:</label><br>
+        <textarea id="conditions" name="conditions"></textarea><br><br>
 
-        <label for="procedure">Planned Procedure:</label>
-        <input type="text" name="procedure" id="procedure"><br><br>
+        <label for="procedure">Planned Procedure:</label><br>
+        <textarea id="procedure" name="procedure"></textarea><br><br>
 
         <input type="submit" value="Submit">
     </form>
 
     {% if response %}
-    <h2>Response from OpenAI:</h2>
-    <p>{{ response }}</p>
+        <h2>Assistant's Response:</h2>
+        <p>{{ response|safe }}</p>
     {% endif %}
 
     {% if error %}
-    <h2>Error:</h2>
-    <p>{{ error }}</p>
+        <h2>Error:</h2>
+        <p>{{ error }}</p>
     {% endif %}
 </body>
 </html>

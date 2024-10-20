@@ -4,8 +4,22 @@ import os
 
 app = Flask(__name__)
 
-# Set OpenAI API key
+# Option 1: Set OpenAI API key from environment variable
 openai.api_key = os.getenv('OPENAI_API_KEY')
+
+# Option 2: Retrieve OpenAI API key from Google Cloud Secret Manager
+# Uncomment the following lines if you prefer this option
+# from google.cloud import secretmanager
+
+# def access_secret(secret_id):
+#     client = secretmanager.SecretManagerServiceClient()
+#     name = f"projects/{PROJECT_ID}/secrets/{secret_id}/versions/latest"
+#     response = client.access_secret_version(request={"name": name})
+#     secret = response.payload.data.decode("UTF-8")
+#     return secret
+
+# openai_api_key = access_secret('openai-api-key')
+# openai.api_key = openai_api_key
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -26,16 +40,18 @@ def index():
             Current Medical Conditions: {patient_data.get('conditions')}
             Planned Procedure: {patient_data.get('procedure')}
 
-            Please provide a comprehensive analysis of this patient's medical profile.
+            Please provide a comprehensive analysis of this patient's medical profile, including potential risks, considerations for the planned procedure, and any recommendations for their care.
             """
 
-            # Make the OpenAI API call using the new interface
+            # Make the OpenAI API call using the ChatGPT model
             response = openai.ChatCompletion.create(
-                model="gpt-4",
+                model="gpt-3.5-turbo",  # Use "gpt-4" if you have access
                 messages=[
+                    {"role": "system", "content": "You are a helpful medical assistant."},
                     {"role": "user", "content": prompt}
                 ],
-                max_tokens=500
+                max_tokens=500,
+                temperature=0.7
             )
 
             assistant_response = response['choices'][0]['message']['content']
@@ -45,6 +61,7 @@ def index():
         except Exception as e:
             return render_template('index.html', error=str(e))
 
+    # For GET request, render the form
     return render_template('index.html')
 
 @app.route('/health')
