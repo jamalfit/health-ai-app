@@ -14,8 +14,13 @@ def access_secret(secret_id):
     return response.payload.data.decode("UTF-8")
 
 # Cache secrets at startup
-openai_api_key = access_secret('openai-api-key')
-assistant_id = access_secret('openai-assistant-id')
+#openai_api_key = access_secret('openai-api-key')
+#assistant_id = access_secret('openai-assistant-id')
+
+openai_api_key = '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'
+assistant_id = 'asst_P3tTEDFn8OLQEOeS55T66Zuz'
+
+
 openai.api_key = openai_api_key
 
 @app.route('/', methods=['GET', 'POST'])
