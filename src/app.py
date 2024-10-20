@@ -1,26 +1,23 @@
 from flask import Flask, render_template, request, jsonify
-from google.cloud import secretmanager
-import openai
+# from google.cloud import secretmanager
+# import openai
 import os
 
 app = Flask(__name__)
 
-# Setup secret manager client
-client = secretmanager.SecretManagerServiceClient()
+# Setup secret manager client (commented out for now)
+# client = secretmanager.SecretManagerServiceClient()
 
-def access_secret(secret_id):
-    name = f"projects/health-ai-app-2024-439109/secrets/{secret_id}/versions/latest"
-    response = client.access_secret_version(request={"name": name})
-    return response.payload.data.decode("UTF-8")
+# def access_secret(secret_id):
+#     name = f"projects/health-ai-app-2024-439109/secrets/{secret_id}/versions/latest"
+#     response = client.access_secret_version(request={"name": name})
+#     return response.payload.data.decode("UTF-8")
 
-# Cache secrets at startup
-openai_api_key = access_secret('openai-api-key')
-assistant_id = access_secret('openai-assistant-id')
+# Cache secrets at startup (commented out for now)
+# openai_api_key = access_secret('openai-api-key')
+# assistant_id = access_secret('openai-assistant-id')
 
-
-
-
-openai.api_key = openai_api_key
+# openai.api_key = openai_api_key
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -37,7 +34,7 @@ def index():
             'procedure': request.form['procedure']
         }
 
-        # Format prompt for OpenAI
+        # Format prompt for OpenAI (commented out for now)
         prompt = f"""
         Patient Information:
         Identifier: {patient_data['identifier']}
@@ -53,23 +50,15 @@ def index():
         """
 
         try:
-            response = openai.ChatCompletion.create(
-                model="gpt-4",
-                messages=[
-                    {"role": "system", "content": "You are a helpful assistant."},
-                    {"role": "user", "content": prompt}
-                ]
-            )
-            assistant_response = response.choices[0].message['content']
+            # Commented out the OpenAI call for now
+            # response = openai.ChatCompletion.create(
+            #     model="gpt-4",
+            #     messages=[
+            #         {"role": "system", "content": "You are a helpful assistant."},
+            #         {"role": "user", "content": prompt}
+            #     ]
+            # )
+            # assistant_response = response.choices[0].message['content']
 
-            return render_template('index.html', response=assistant_response)
-
-        except Exception as e:
-            app.logger.error(f"Error: {e}")
-            return render_template('index.html', error="An error occurred, please try again later.")
-
-    return render_template('index.html')
-
-@app.route('/health')
-def health_check():
-    return jsonify({"status": "healthy", "service": "health-ai-app"}), 200
+            # For now, mock the assistant response
+            assistant_response = "This is a mock 
