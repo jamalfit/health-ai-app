@@ -21,7 +21,7 @@ def access_secret(secret_id):
 
 try:
     # Cache secrets at startup
-    openai_api_key = access_secret('openai-api-key')
+    openai_api_key = access_secret('openai-api-key-2')
     assistant_id = access_secret('openai-assistant-id')
     openai_client = OpenAI(api_key=openai_api_key)
     app.logger.info("Secrets loaded successfully")
