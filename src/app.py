@@ -40,7 +40,7 @@ def index():
                 max_tokens=500
             )
 
-            # Get the response from OpenAI
+            # Access the correct field for the assistant's response
             assistant_response = response['choices'][0]['message']['content']
 
             return render_template('index.html', response=assistant_response)
