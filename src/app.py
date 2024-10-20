@@ -30,13 +30,15 @@ def index():
             """
 
             # Make the OpenAI API call using the new interface
-            response = openai.Completion.create(
-                engine="gpt-4",  # Note: 'engine' instead of 'model'
-                prompt=prompt,
+            response = openai.Chat.completions.create(
+                model="gpt-4",
+                messages=[
+                    {"role": "user", "content": prompt}
+                ],
                 max_tokens=500
             )
 
-            assistant_response = response.choices[0].text.strip()
+            assistant_response = response.choices[0].message.content
 
             return render_template('index.html', response=assistant_response)
 
