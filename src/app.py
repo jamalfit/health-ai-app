@@ -97,6 +97,7 @@ def health_check():
 
 # Test route to confirm OpenAI API key is set
 @app.route('/test-openai')
+
 def test_openai_key():
     if openai.api_key:
         return f"OpenAI API key is set: {openai.api_key[:5]}...", 200
