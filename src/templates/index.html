@@ -3,58 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Health AI App</title>
-    <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; }
-        form { max-width: 600px; margin: 0 auto; }
-        label { display: block; margin-top: 10px; }
-        input, textarea { width: 100%; padding: 8px; margin-top: 5px; }
-        button { display: block; width: 100%; padding: 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer; margin-top: 20px; }
-        #response { margin-top: 20px; border: 1px solid #ddd; padding: 20px; white-space: pre-wrap; }
-    </style>
+    <title>Patient Data</title>
 </head>
 <body>
     <h1>Patient Data Form</h1>
+    
     <form method="POST">
-        <label for="identifier">Patient Identifier:</label>
-        <input type="text" id="identifier" name="identifier" required>
+        <label for="identifier">Identifier:</label>
+        <input type="text" name="identifier" id="identifier"><br><br>
 
         <label for="gender">Gender:</label>
-        <input type="text" id="gender" name="gender" required>
+        <input type="text" name="gender" id="gender"><br><br>
 
         <label for="height">Height (inches):</label>
-        <input type="number" id="height" name="height" required>
+        <input type="number" name="height" id="height"><br><br>
 
         <label for="weight">Weight (pounds):</label>
-        <input type="number" id="weight" name="weight" required>
+        <input type="number" name="weight" id="weight"><br><br>
 
-        <label for="medications">Current Medications:</label>
-        <textarea id="medications" name="medications" rows="3" required></textarea>
+        <label for="medications">Medications:</label>
+        <input type="text" name="medications" id="medications"><br><br>
 
-        <label for="allergies">Drug Allergies:</label>
-        <textarea id="allergies" name="allergies" rows="3" required></textarea>
+        <label for="allergies">Allergies:</label>
+        <input type="text" name="allergies" id="allergies"><br><br>
 
-        <label for="conditions">Current Medical Conditions:</label>
-        <textarea id="conditions" name="conditions" rows="3" required></textarea>
+        <label for="conditions">Conditions:</label>
+        <input type="text" name="conditions" id="conditions"><br><br>
 
         <label for="procedure">Planned Procedure:</label>
-        <textarea id="procedure" name="procedure" rows="3" required></textarea>
+        <input type="text" name="procedure" id="procedure"><br><br>
 
-        <button type="submit">Submit</button>
+        <input type="submit" value="Submit">
     </form>
 
     {% if response %}
-    <div id="response">
-        <h2>AI Assistant Response:</h2>
-        <p>{{ response }}</p>
-    </div>
+    <h2>Response from OpenAI:</h2>
+    <p>{{ response }}</p>
     {% endif %}
 
     {% if error %}
-    <div id="error" style="color: red;">
-        <h2>Error:</h2>
-        <p>{{ error }}</p>
-    </div>
+    <h2>Error:</h2>
+    <p>{{ error }}</p>
     {% endif %}
 </body>
 </html>
