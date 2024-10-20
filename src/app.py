@@ -74,30 +74,34 @@ def index():
 
         try:
             app.logger.info("Sending request to OpenAI")
-            # Use the correct API call for OpenAI completions
+            # Use the correct API call for OpenAI completions with a timeout
             response = openai.Completion.create(
                 model="gpt-4",
                 prompt=prompt,
                 max_tokens=500,
-                api_key=openai_api_key  # Explicitly pass the API key here
+                api_key=openai_api_key,  # Explicitly pass the API key
+                timeout=10  # Timeout after 10 seconds if OpenAI is unresponsive
             )
             assistant_response = response['choices'][0]['text']
             app.logger.info("Received response from OpenAI")
             return render_template('index.html', response=assistant_response)
 
-        except Exception as e:
+        except openai.error.OpenAIError as e:
             app.logger.error(f"Error in OpenAI API call: {str(e)}")
-            return render_template('index.html', error=f"An error occurred: {str(e)}")
+            return render_template('index.html', error=f"An error occurred with OpenAI API: {str(e)}")
+        except Exception as e:
+            app.logger.error(f"Unexpected error: {str(e)}")
+            return render_template('index.html', error=f"An unexpected error occurred: {str(e)}")
 
     return render_template('index.html')
 
+# Health check route to ensure the service is running
 @app.route('/health')
 def health_check():
     return jsonify({"status": "healthy", "service": "health-ai-app"}), 200
 
 # Test route to confirm OpenAI API key is set
 @app.route('/test-openai')
-
 def test_openai_key():
     if openai.api_key:
         return f"OpenAI API key is set: {openai.api_key[:5]}...", 200
@@ -111,8 +115,9 @@ def test_env():
     if api_key:
         return f"OPENAI_API_KEY is set: {api_key[:5]}...", 200
     else:
-        return "OPENAI_API_KEY is not set!"
+        return "OPENAI_API_KEY is not set!", 500
 
+# Test route to check if secrets are being retrieved correctly
 @app.route('/test-secrets')
 def test_secrets():
     try:
