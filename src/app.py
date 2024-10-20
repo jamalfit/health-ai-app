@@ -18,6 +18,8 @@ openai_api_key = access_secret('openai-api-key')
 assistant_id = access_secret('openai-assistant-id')
 
 
+
+
 openai.api_key = openai_api_key
 
 @app.route('/', methods=['GET', 'POST'])
