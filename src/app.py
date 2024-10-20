@@ -27,11 +27,20 @@ try:
     openai_api_key = access_secret('openai-api-key-2')
     assistant_id = access_secret('openai-assistant-id')
 
-    # Set the OpenAI API key
+    # Check if the API key is properly retrieved
+    if not openai_api_key:
+        raise ValueError("OpenAI API key is empty or None!")
+    app.logger.info(f"OpenAI API Key retrieved: {openai_api_key[:5]}...")
+
+    # Set the OpenAI API key directly in the environment variable
+    os.environ['OPENAI_API_KEY'] = openai_api_key
+
+    # Also set it in the OpenAI client, just to be sure
     openai.api_key = openai_api_key
-    app.logger.info(f"OpenAI API Key set successfully: {openai_api_key[:5]}...")
+    app.logger.info("OpenAI API Key set successfully.")
 except Exception as e:
     app.logger.error(f"Failed to load secrets: {str(e)}")
+    raise
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -65,11 +74,12 @@ def index():
 
         try:
             app.logger.info("Sending request to OpenAI")
-            # Use the correct API call for OpenAI completions in version >= 1.0.0
-            response = openai.completions.create(
+            # Use the correct API call for OpenAI completions
+            response = openai.Completion.create(
                 model="gpt-4",
                 prompt=prompt,
-                max_tokens=500  # Adjust based on your needs
+                max_tokens=500,
+                api_key=openai_api_key  # Explicitly pass the API key here
             )
             assistant_response = response['choices'][0]['text']
             app.logger.info("Received response from OpenAI")
@@ -92,6 +102,15 @@ def test_openai_key():
         return f"OpenAI API key is set: {openai.api_key[:5]}...", 200
     else:
         return "OpenAI API key is not set!", 500
+
+# Test route to check environment variable
+@app.route('/test-env')
+def test_env():
+    api_key = os.getenv('OPENAI_API_KEY')
+    if api_key:
+        return f"OPENAI_API_KEY is set: {api_key[:5]}...", 200
+    else:
+        return "OPENAI_API_KEY is not set!"
 
 @app.route('/test-secrets')
 def test_secrets():
