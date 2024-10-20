@@ -4,18 +4,17 @@ import os
 
 app = Flask(__name__)
 
-# Set OpenAI API key (using environment variable or direct key for simplicity)
+# Set OpenAI API key from environment variable
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
-# Route to handle form submission or API request
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
         try:
-            # Collect form data from the request
+            # Collect form data
             patient_data = request.form
 
-            # Format the prompt for OpenAI
+            # Format the prompt
             prompt = f"""
             Patient Information:
             Identifier: {patient_data.get('identifier')}
@@ -30,28 +29,24 @@ def index():
             Please provide a comprehensive analysis of this patient's medical profile.
             """
 
-            # Make the OpenAI request
-            response = openai.ChatCompletion.create(
+            # Make the OpenAI API call using the new interface
+            response = openai.Chat.completions.create(
                 model="gpt-4",
                 messages=[
-                    {"role": "system", "content": "You are a helpful assistant."},
                     {"role": "user", "content": prompt}
                 ],
                 max_tokens=500
             )
 
-            # Access the correct field for the assistant's response
-            assistant_response = response['choices'][0]['message']['content']
+            assistant_response = response.choices[0].message.content
 
             return render_template('index.html', response=assistant_response)
 
         except Exception as e:
             return render_template('index.html', error=str(e))
 
-    # If it's a GET request, render a simple form
     return render_template('index.html')
 
-# Health check endpoint
 @app.route('/health')
 def health_check():
     return jsonify({"status": "healthy"}), 200
