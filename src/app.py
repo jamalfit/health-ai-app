@@ -24,6 +24,9 @@ try:
     openai_api_key = access_secret('openai-api-key-2')
     assistant_id = access_secret('openai-assistant-id')
 
+    # Log first few characters of the API key
+    app.logger.info(f"OpenAI API Key loaded: {openai_api_key[:5]}...")
+
     # Set OpenAI API key
     openai.api_key = openai_api_key
     app.logger.info("Secrets loaded successfully")
