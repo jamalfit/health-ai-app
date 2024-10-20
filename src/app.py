@@ -1,10 +1,10 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, render_template, jsonify
 import openai
 import os
 
 app = Flask(__name__)
 
-# Set OpenAI API key from environment variable
+# Set OpenAI API key
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
 @app.route('/', methods=['GET', 'POST'])
@@ -30,7 +30,7 @@ def index():
             """
 
             # Make the OpenAI API call using the new interface
-            response = openai.Chat.completions.create(
+            response = openai.ChatCompletion.create(
                 model="gpt-4",
                 messages=[
                     {"role": "user", "content": prompt}
@@ -38,7 +38,7 @@ def index():
                 max_tokens=500
             )
 
-            assistant_response = response.choices[0].message.content
+            assistant_response = response['choices'][0]['message']['content']
 
             return render_template('index.html', response=assistant_response)
 
@@ -52,4 +52,4 @@ def health_check():
     return jsonify({"status": "healthy"}), 200
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
+    app.run(debug=True)
