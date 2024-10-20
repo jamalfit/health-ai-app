@@ -7,14 +7,17 @@ import logging
 app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
 
-# Setup secret manager client
+# Setup Secret Manager client
 client = secretmanager.SecretManagerServiceClient()
 
+# Function to access the secret from Secret Manager
 def access_secret(secret_id):
     try:
         name = f"projects/health-ai-app-2024-439109/secrets/{secret_id}/versions/latest"
         response = client.access_secret_version(request={"name": name})
-        return response.payload.data.decode("UTF-8")
+        secret = response.payload.data.decode("UTF-8")
+        app.logger.info(f"Successfully retrieved secret: {secret[:5]}...")  # Log first few characters
+        return secret
     except Exception as e:
         app.logger.error(f"Error accessing secret {secret_id}: {str(e)}")
         raise
@@ -24,12 +27,9 @@ try:
     openai_api_key = access_secret('openai-api-key-2')
     assistant_id = access_secret('openai-assistant-id')
 
-    # Log first few characters of the API key
-    app.logger.info(f"OpenAI API Key loaded: {openai_api_key[:5]}...")
-
-    # Set OpenAI API key
+    # Set the OpenAI API key
     openai.api_key = openai_api_key
-    app.logger.info("Secrets loaded successfully")
+    app.logger.info(f"OpenAI API Key set successfully: {openai_api_key[:5]}...")
 except Exception as e:
     app.logger.error(f"Failed to load secrets: {str(e)}")
 
@@ -84,6 +84,14 @@ def index():
 @app.route('/health')
 def health_check():
     return jsonify({"status": "healthy", "service": "health-ai-app"}), 200
+
+# Test route to confirm OpenAI API key is set
+@app.route('/test-openai')
+def test_openai_key():
+    if openai.api_key:
+        return f"OpenAI API key is set: {openai.api_key[:5]}...", 200
+    else:
+        return "OpenAI API key is not set!", 500
 
 @app.route('/test-secrets')
 def test_secrets():
