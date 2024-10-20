@@ -62,14 +62,13 @@ def index():
 
         try:
             app.logger.info("Sending request to OpenAI")
-            response = openai.ChatCompletion.create(
+            # Use the correct API call for OpenAI completions in version >= 1.0.0
+            response = openai.completions.create(
                 model="gpt-4",
-                messages=[
-                    {"role": "system", "content": "You are a helpful assistant."},
-                    {"role": "user", "content": prompt}
-                ]
+                prompt=prompt,
+                max_tokens=500  # Adjust based on your needs
             )
-            assistant_response = response.choices[0].message['content']
+            assistant_response = response['choices'][0]['text']
             app.logger.info("Received response from OpenAI")
             return render_template('index.html', response=assistant_response)
 
